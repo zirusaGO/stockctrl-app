@@ -491,35 +491,27 @@ td{padding:8px 11px;font-size:11px;vertical-align:middle}
 <body>
 
 <!-- FIRST-TIME SETUP WIZARD -->
-<div id="setupWizard" style="display:none;position:fixed;inset:0;background:#0e0b14;z-index:9999;display:flex;align-items:center;justify-content:center">
+<div id="setupWizard" style="display:none;position:fixed;inset:0;background:#0e0b14;z-index:9999;align-items:center;justify-content:center">
   <div style="background:#13151f;border:1px solid #2e3350;border-radius:12px;padding:30px;width:420px;max-width:94vw;text-align:center">
     <div style="font-family:'Syne',sans-serif;font-size:24px;font-weight:800;color:#fff;margin-bottom:4px">STOCK<span style="color:#FFD700">CTRL</span></div>
     <div style="font-size:10px;color:#888;letter-spacing:.15em;margin-bottom:24px">INVENTORY CONTROL SYSTEM</div>
-    <div style="font-size:14px;color:#dde0e8;margin-bottom:20px;font-weight:600">Welcome! Let\'s set up your store.</div>
+    <div style="font-size:14px;color:#dde0e8;margin-bottom:20px;font-weight:600">Welcome! Set up your store.</div>
     <div style="text-align:left;margin-bottom:12px">
       <label style="font-size:9px;color:#888;letter-spacing:.1em;display:block;margin-bottom:4px">STORE NAME</label>
-      <input id="wizStoreName" type="text" placeholder="e.g. Grocery Outlet Quakertown" style="width:100%;padding:10px 12px;background:#1a1d2e;border:1px solid #2e3350;border-radius:6px;color:#fff;font-family:'DM Mono',monospace;font-size:13px;outline:none" />
+      <input id="wizStoreName" type="text" placeholder="e.g. Grocery Outlet Quakertown" style="width:100%;padding:10px 12px;background:#1a1d2e;border:1px solid #2e3350;border-radius:6px;color:#fff;font-family:'DM Mono',monospace;font-size:13px;outline:none"/>
     </div>
     <div style="text-align:left;margin-bottom:12px">
       <label style="font-size:9px;color:#888;letter-spacing:.1em;display:block;margin-bottom:4px">STORE NUMBER (optional)</label>
-      <input id="wizStoreNum" type="text" placeholder="e.g. 0723" style="width:100%;padding:10px 12px;background:#1a1d2e;border:1px solid #2e3350;border-radius:6px;color:#fff;font-family:'DM Mono',monospace;font-size:13px;outline:none" />
-    </div>
-    <div style="text-align:left;margin-bottom:12px">
-      <label style="font-size:9px;color:#888;letter-spacing:.1em;display:block;margin-bottom:4px">YOUR NAME (optional)</label>
-      <input id="wizUserName" type="text" placeholder="e.g. John" style="width:100%;padding:10px 12px;background:#1a1d2e;border:1px solid #2e3350;border-radius:6px;color:#fff;font-family:'DM Mono',monospace;font-size:13px;outline:none" />
+      <input id="wizStoreNum" type="text" placeholder="e.g. 0723" style="width:100%;padding:10px 12px;background:#1a1d2e;border:1px solid #2e3350;border-radius:6px;color:#fff;font-family:'DM Mono',monospace;font-size:13px;outline:none"/>
     </div>
     <div style="text-align:left;margin-bottom:20px">
-      <label style="font-size:9px;color:#888;letter-spacing:.1em;display:block;margin-bottom:4px">GOOGLE DRIVE SYNC URL (set up later in Settings)</label>
-      <input id="wizSyncUrl" type="text" placeholder="Paste your Apps Script URL here or leave blank" style="width:100%;padding:10px 12px;background:#1a1d2e;border:1px solid #2e3350;border-radius:6px;color:#fff;font-family:'DM Mono',monospace;font-size:11px;outline:none" />
+      <label style="font-size:9px;color:#888;letter-spacing:.1em;display:block;margin-bottom:4px">GOOGLE DRIVE SYNC URL (optional — set up later in Settings)</label>
+      <input id="wizSyncUrl" type="text" placeholder="Paste your Apps Script URL here or leave blank" style="width:100%;padding:10px 12px;background:#1a1d2e;border:1px solid #2e3350;border-radius:6px;color:#fff;font-family:'DM Mono',monospace;font-size:11px;outline:none"/>
     </div>
     <div style="font-size:9px;color:#555;margin-bottom:16px;text-align:left">
-      The app comes pre-loaded with common Grocery Outlet products.<br/>
-      All inventory counts start at 0 — upload your first delivery to get started.<br/>
-      You can add, remove, or rename departments and products anytime.
+      Pre-loaded with common GO products. All counts start at 0.<br/>Upload your first delivery to get started.
     </div>
-    <button onclick="completeSetup()" style="width:100%;padding:14px;background:#FFD700;color:#4a1b0c;border:none;border-radius:8px;font-family:'Syne',sans-serif;font-size:14px;font-weight:800;cursor:pointer;letter-spacing:.05em">
-      START STOCKCTRL
-    </button>
+    <button onclick="completeSetup()" style="width:100%;padding:14px;background:#FFD700;color:#4a1b0c;border:none;border-radius:8px;font-family:'Syne',sans-serif;font-size:14px;font-weight:800;cursor:pointer">START STOCKCTRL</button>
   </div>
 </div>
 
@@ -825,6 +817,12 @@ td{padding:8px 11px;font-size:11px;vertical-align:middle}
       <button class="utab" onclick="utab('man')">✏️ Manual</button>
     </div>
 
+    <div class="utabs" id="utThrow" style="display:none">
+      <button class="utab on" onclick="utab('throwpdf')">🗑️ THROWAWAY PDF <span class="pill" style="background:#ff6b3512;color:#ff6b35;border:1px solid #ff6b3525">SUBTRACT</span></button>
+      <button class="utab" onclick="utab('csv')">📄 CSV</button>
+      <button class="utab" onclick="utab('man')">✏️ Manual</button>
+    </div>
+
     <!-- CSV pane -->
     <div class="upane on" id="upCSV">
       <div class="uzone" onclick="document.getElementById('csvIn').click()">
@@ -942,6 +940,26 @@ td{padding:8px 11px;font-size:11px;vertical-align:middle}
       </div>
       <input type="file" id="pdfIn" accept=".pdf,.jpg,.jpeg,.png,.heic,.webp,image/*" style="display:none" onchange="doPDF(this)"/>
       <div id="pdfRes" style="display:none" class="res"></div>
+    </div>
+
+    <!-- THROWAWAY PDF pane -->
+    <div class="upane" id="upThrowPdf">
+      <div style="background:#ff6b3510;border:1px solid #ff6b3530;border-radius:6px;padding:10px 13px;margin-bottom:12px">
+        <div style="font-size:11px;font-weight:700;color:#ff6b35;margin-bottom:4px">🗑️ THROWAWAY REPORT — Subtracts from ON HAND</div>
+        <div style="font-size:9px;color:#9099c0;line-height:1.8">
+          ✅ Reads GO Throwaway PDF — matches by UPC across <strong style="color:#dde0e8">ALL departments</strong><br/>
+          ✅ <strong style="color:#dde0e8">Subtracts</strong> throwaway qty from ON HAND<br/>
+          ❌ Does <strong style="color:#ff6b35">NOT add</strong> new items — skips anything not already in your inventory<br/>
+          ✅ Combines duplicate items automatically
+        </div>
+      </div>
+      <div class="uzone" style="border-color:#ff6b3540" onclick="document.getElementById('throwPdfIn').click()">
+        <div class="uzicon">🗑️</div>
+        <div class="uzlbl" style="color:#ff6b35;font-size:11px">Upload GO Throwaway PDF</div>
+        <div class="uzhint">Reads item, UPC, quantity · matches across all departments</div>
+      </div>
+      <input type="file" id="throwPdfIn" accept=".pdf" style="display:none" onchange="doThrowPDF(this)"/>
+      <div id="throwPdfRes" style="display:none" class="res"></div>
     </div>
 
     <!-- Manual pane -->
@@ -1152,7 +1170,7 @@ const DEFAULT_DEPTS=[
 ];
 
 // ══ STATE ═════════════════════════════════════════════════════════════════════
-const DATA_VER='sc_starter_v2';
+const DATA_VER='sc_starter_v3';
 if(localStorage.getItem('sc_ver')!==DATA_VER){
   localStorage.removeItem('sc_depts');
   localStorage.setItem('sc_ver',DATA_VER);
@@ -2746,8 +2764,10 @@ function openTx(type){
   const refr=document.getElementById('refRes');if(refr)refr.style.display='none';
   document.getElementById('manBtn').style.display='none';
   document.getElementById('utSale').style.display=type==='sale'?'flex':'none';
-  document.getElementById('utBasic').style.display=type!=='sale'?'flex':'none';
-  utab('csv');
+  document.getElementById('utBasic').style.display=type==='delivery'?'flex':'none';
+  document.getElementById('utThrow').style.display=type==='throwaway'?'flex':'none';
+  const throwRes=document.getElementById('throwPdfRes');if(throwRes)throwRes.style.display='none';
+  utab(type==='throwaway'?'throwpdf':'csv');
   document.getElementById('manRows').innerHTML=!getItems().length
     ?'<div style="color:#1e2330;font-size:9px">Add products first.</div>'
     :getItems().map(item=>`<div class="mrow"><span class="mrow-n">${esc(item.name)}</span>
@@ -2758,7 +2778,7 @@ function closeTx(){document.getElementById('txMod').style.display='none';curTx=n
 
 function utab(t){
   // Map tab id to pane id
-  const paneMap={csv:'upCSV', avgpdf:'upAvgPDF', pdf:'upPDF', dlvpdf:'upDlvpdf', chkinv:'upChkinv', man:'upMan'};
+  const paneMap={csv:'upCSV', avgpdf:'upAvgPDF', pdf:'upPDF', dlvpdf:'upDlvpdf', chkinv:'upChkinv', throwpdf:'upThrowPdf', man:'upMan'};
   Object.values(paneMap).forEach(pid=>{
     const el=document.getElementById(pid);
     if(el) el.classList.remove('on');
@@ -3539,6 +3559,172 @@ function parseDlvPDF(all,el){
   applyInvoiceRows(rows,el,false);
 }
 
+
+// ══ THROWAWAY PDF ═════════════════════════════════════════════════════════════
+function doThrowPDF(input){
+  const file=input.files[0];if(!file)return;
+  const el=document.getElementById('throwPdfRes');
+  el.style.display='block';el.className='res inf';
+  el.innerHTML='<span class="spin">⚙️</span> Reading throwaway report…';
+  if(typeof pdfjsLib==='undefined'){
+    el.className='res err';el.innerHTML='❌ PDF library needs internet on first open.';
+    input.value='';return;
+  }
+  const reader=new FileReader();
+  reader.onload=async ev=>{
+    try{
+      const arr=new Uint8Array(ev.target.result);
+      const pdf=await pdfjsLib.getDocument({data:arr}).promise;
+      const all=[];
+      for(let p=1;p<=pdf.numPages;p++){
+        const pg=await pdf.getPage(p);
+        const tc=await pg.getTextContent();
+        tc.items.forEach(it=>{
+          const s=it.str.trim();
+          if(s)all.push({str:s,x:Math.round(it.transform[4]),y:Math.round(it.transform[5]),page:p});
+        });
+      }
+      parseThrowPDF(all,el);
+    }catch(err){el.className='res err';el.innerHTML=`❌ ${esc(err.message)}`;}
+    input.value='';
+  };
+  reader.onerror=()=>{el.className='res err';el.innerHTML='❌ Read error.';input.value='';};
+  reader.readAsArrayBuffer(file);
+}
+
+function parseThrowPDF(all,el){
+  // Group tokens by line (y position)
+  const yMap={};
+  all.forEach(t=>{const yk=t.page*10000+Math.round(t.y/6)*6;if(!yMap[yk])yMap[yk]=[];yMap[yk].push(t);});
+
+  // Parse each line looking for: ITEM# DESC UPC DEPT REASON $RETAIL -QTY -$ADJ
+  const rawRows=[];
+  const seen=new Set();
+
+  Object.values(yMap).forEach(line=>{
+    line.sort((a,b)=>a.x-b.x);
+    const txt=line.map(t=>t.str).join(' ');
+    // Skip header/meta lines
+    if(/^(ITEM|DESCRIPTION|UPC|DEPT|REASON|RETAIL|QUANTITY|ADJUST|General|Basic|Type|Throwaway|Submitted|Created|Notes|No notes|No reason|STATUS|#\d|Items\()/i.test(txt.trim()))return;
+
+    // Find UPC: look for a token that's 4-14 digits
+    let upcTok=null;
+    for(const t of line){
+      if(/^\d{8,14}$/.test(t.str)){upcTok=t;break;}
+    }
+    // Also try shorter UPCs (produce: 4 digits like 4225, 3082)
+    if(!upcTok){
+      for(const t of line){
+        if(/^\d{4,7}$/.test(t.str)&&line.some(l=>/^-\d+$/.test(l.str))){upcTok=t;break;}
+      }
+    }
+    if(!upcTok)return;
+
+    // Find negative quantity (e.g., -1, -2, -16)
+    const qtyTok=line.find(t=>/^-\d+$/.test(t.str));
+    if(!qtyTok)return;
+    const qty=Math.abs(parseInt(qtyTok.str));
+    if(!qty||qty<=0)return;
+
+    // Find DEPT code (3-digit number)
+    const deptTok=line.find(t=>/^\d{3}$/.test(t.str)&&t.str!==upcTok.str);
+    const deptCode=deptTok?deptTok.str:'';
+
+    // Find description: text between item# and UPC
+    const descToks=line.filter(t=>
+      t!==upcTok&&t!==qtyTok&&t!==deptTok&&
+      !/^\d{3,7}$/.test(t.str)&&!/^-?\$/.test(t.str)&&
+      !/^-\d+$/.test(t.str)&&!/^(PC|DS|SD|ST|CORE)$/i.test(t.str)&&
+      t.str.length>1&&t.x<(upcTok?upcTok.x:999)
+    );
+    const desc=descToks.map(t=>t.str).join(' ').trim();
+
+    // Combine by UPC — same item appears multiple times
+    const key=upcTok.str;
+    const existing=rawRows.find(r=>r.upc===key);
+    if(existing){
+      existing.qty+=qty;
+    } else {
+      rawRows.push({upc:key,desc:desc||upcTok.str,qty,deptCode});
+    }
+  });
+
+  if(!rawRows.length){
+    el.className='res err';
+    el.innerHTML='❌ No throwaway items found. Make sure this is a GO Throwaway report PDF.';
+    return;
+  }
+
+  // Match against ALL departments by UPC first, then name
+  let matched=0,skipped=0;
+  const resultRows=[];
+  const logEntries=[];
+
+  rawRows.forEach(r=>{
+    let foundItem=null,foundDept=null;
+
+    // Pass 1: match by UPC across all departments
+    for(const d of depts){
+      const item=d.items.find(i=>i.upc&&i.upc.replace(/\D/g,'')===r.upc.replace(/\D/g,''));
+      if(item){foundItem=item;foundDept=d;break;}
+    }
+
+    // Pass 2: match by name if UPC didn't work
+    if(!foundItem){
+      const rName=r.desc.toLowerCase().trim();
+      for(const d of depts){
+        const item=d.items.find(i=>i.name.toLowerCase().trim()===rName||
+          i.name.toLowerCase().includes(rName)||rName.includes(i.name.toLowerCase()));
+        if(item){foundItem=item;foundDept=d;break;}
+      }
+    }
+
+    if(foundItem){
+      foundItem.total=(foundItem.total||0)-r.qty;
+      foundItem.throwawayTotal=(foundItem.throwawayTotal||0)+r.qty;
+      logEntries.push({name:foundItem.name,qty:r.qty,dept:foundDept.name});
+      resultRows.push({name:foundItem.name,qty:r.qty,dept:foundDept.name,matched:true});
+      matched++;
+    } else {
+      resultRows.push({name:r.desc,qty:r.qty,upc:r.upc,deptCode:r.deptCode,matched:false});
+      skipped++;
+    }
+  });
+
+  // Save and log
+  if(matched>0){
+    // Log to the currently active department
+    const dept=getDept();
+    dept.txLog.push({ts:new Date().toLocaleString(),type:'throwaway',entries:logEntries,note:'from GO throwaway PDF'});
+    saveLocal();if(syncUrl)scheduleDriveSync();
+    renderDeptTabs();renderMain();
+  }
+
+  // Display results
+  el.className='res ok';
+  el.style.background='#080f18';
+  el.style.border='1px solid #ff6b3530';
+  el.innerHTML=`
+    <div style="font-size:11px;font-weight:700;color:#ff6b35;margin-bottom:6px">
+      🗑️ Throwaway Applied — ${matched} items subtracted from ON HAND
+      ${skipped>0?`<span style="color:#ffab00;font-size:9px;margin-left:6px">⚠ ${skipped} skipped (not in inventory)</span>`:''}
+    </div>
+    <div style="display:flex;gap:6px;padding:4px 0 6px;border-bottom:1px solid #2e3350;font-size:8px;font-weight:700;color:#6068a0;letter-spacing:.05em">
+      <span style="flex:1">PRODUCT</span>
+      <span style="width:70px;text-align:center">DEPT</span>
+      <span style="width:50px;text-align:right">QTY</span>
+      <span style="width:50px;text-align:right">STATUS</span>
+    </div>
+    <div style="max-height:250px;overflow-y:auto">
+      ${resultRows.map(r=>`
+        <div style="display:flex;gap:6px;align-items:center;padding:3px 0;border-bottom:1px solid #1a1d2e;font-size:9px">
+          <span style="flex:1;color:${r.matched?'#dde0e8':'#555'};overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(r.name)}${!r.matched?` <span style="color:#444;font-size:7px">UPC:${r.upc}</span>`:''}</span>
+          <span style="width:70px;text-align:center;color:${r.matched?'#9099c0':'#444'};font-size:8px">${r.matched?r.dept:(r.deptCode||'?')}</span>
+          <span style="width:50px;text-align:right;color:${r.matched?'#ff6b35':'#444'};font-weight:${r.matched?'700':'400'}">-${r.qty}</span>
+          <span style="width:50px;text-align:right;font-size:8px;color:${r.matched?'#4ade80':'#ffab00'}">${r.matched?'✅':'skip'}</span>
+        </div>`).join('')}
+    </div>`;
+}
 
 // ══ CSV ════════════════════════════════════════════════════════════════════════
 function doCSV(input){
@@ -4653,31 +4839,24 @@ window.addEventListener('online', ()=>{if(syncUrl)saveToDrive(false);});
 window.addEventListener('offline',()=>setSyncStatus('offline'));
 
 // ══ FIRST-TIME SETUP WIZARD ══════════════════════════════════════════════════
-function showSetupWizard(){
-  const wiz=document.getElementById('setupWizard');
-  if(wiz) wiz.style.display='flex';
-}
+function showSetupWizard(){var w=document.getElementById('setupWizard');if(w)w.style.display='flex';}
 function completeSetup(){
-  const name=document.getElementById('wizStoreName').value.trim()||'My Store';
-  const num=document.getElementById('wizStoreNum').value.trim();
-  const user=document.getElementById('wizUserName').value.trim();
-  const sync=document.getElementById('wizSyncUrl').value.trim();
-  const subtitle=name.toUpperCase()+(num?' · '+num:'');
-  localStorage.setItem('sc_subtitle',subtitle);
+  var name=document.getElementById('wizStoreName').value.trim()||'My Store';
+  var num=document.getElementById('wizStoreNum').value.trim();
+  var sync=document.getElementById('wizSyncUrl').value.trim();
+  var sub=name.toUpperCase()+(num?' · '+num:'');
+  localStorage.setItem('sc_subtitle',sub);
   localStorage.setItem('sc_storeName',name);
-  if(user) localStorage.setItem('sc_userName',user);
-  if(sync){ localStorage.setItem('sc_syncUrl',sync); syncUrl=sync; }
+  if(sync){localStorage.setItem('sc_syncUrl',sync);syncUrl=sync;}
   localStorage.setItem('sc_setupDone','1');
   document.getElementById('setupWizard').style.display='none';
-  document.getElementById('appSubtitle').textContent=subtitle;
+  document.getElementById('appSubtitle').textContent=sub;
   document.title='STOCKCTRL — '+name;
-  if(sync) saveToDrive(false);
+  if(sync)saveToDrive(false);
   renderDeptTabs();renderBanner();renderMain();
-  showToast('Welcome to STOCKCTRL! Upload your first delivery to get started.','#FFD700');
+  showToast('Welcome to STOCKCTRL!','#FFD700');
 }
-if(!localStorage.getItem('sc_setupDone')){
-  window.addEventListener('load',()=>setTimeout(showSetupWizard,300));
-}
+if(!localStorage.getItem('sc_setupDone')){window.addEventListener('load',function(){setTimeout(showSetupWizard,300);});}
 
 </script>
 </body>
