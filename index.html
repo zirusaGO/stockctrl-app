@@ -16,7 +16,7 @@
   %22icons%22:[{%22src%22:%22data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%231a1d2e'/%3E%3Ctext y='.9em' font-size='80' x='10'%3E📦%3C/text%3E%3C/svg%3E%22,%22sizes%22:%22any%22,%22type%22:%22image/svg+xml%22}]
 }"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>STOCKCTRL — Inventory Control</title>
+<title>STOCKCTRL — Your Store</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@700;800&display=swap" rel="stylesheet"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <style>
@@ -495,35 +495,28 @@ td{padding:8px 11px;font-size:11px;vertical-align:middle}
   <div style="background:#13151f;border:1px solid #2e3350;border-radius:12px;padding:30px;width:420px;max-width:94vw;text-align:center">
     <div style="font-family:'Syne',sans-serif;font-size:24px;font-weight:800;color:#fff;margin-bottom:4px">STOCK<span style="color:#FFD700">CTRL</span></div>
     <div style="font-size:10px;color:#888;letter-spacing:.15em;margin-bottom:24px">INVENTORY CONTROL SYSTEM</div>
-    
-    <div style="font-size:14px;color:#dde0e8;margin-bottom:20px;font-weight:600">Welcome! Let's set up your store.</div>
-    
+    <div style="font-size:14px;color:#dde0e8;margin-bottom:20px;font-weight:600">Welcome! Let\'s set up your store.</div>
     <div style="text-align:left;margin-bottom:12px">
       <label style="font-size:9px;color:#888;letter-spacing:.1em;display:block;margin-bottom:4px">STORE NAME</label>
       <input id="wizStoreName" type="text" placeholder="e.g. Grocery Outlet Quakertown" style="width:100%;padding:10px 12px;background:#1a1d2e;border:1px solid #2e3350;border-radius:6px;color:#fff;font-family:'DM Mono',monospace;font-size:13px;outline:none" />
     </div>
-    
     <div style="text-align:left;margin-bottom:12px">
       <label style="font-size:9px;color:#888;letter-spacing:.1em;display:block;margin-bottom:4px">STORE NUMBER (optional)</label>
       <input id="wizStoreNum" type="text" placeholder="e.g. 0723" style="width:100%;padding:10px 12px;background:#1a1d2e;border:1px solid #2e3350;border-radius:6px;color:#fff;font-family:'DM Mono',monospace;font-size:13px;outline:none" />
     </div>
-    
     <div style="text-align:left;margin-bottom:12px">
       <label style="font-size:9px;color:#888;letter-spacing:.1em;display:block;margin-bottom:4px">YOUR NAME (optional)</label>
       <input id="wizUserName" type="text" placeholder="e.g. John" style="width:100%;padding:10px 12px;background:#1a1d2e;border:1px solid #2e3350;border-radius:6px;color:#fff;font-family:'DM Mono',monospace;font-size:13px;outline:none" />
     </div>
-
     <div style="text-align:left;margin-bottom:20px">
       <label style="font-size:9px;color:#888;letter-spacing:.1em;display:block;margin-bottom:4px">GOOGLE DRIVE SYNC URL (set up later in Settings)</label>
       <input id="wizSyncUrl" type="text" placeholder="Paste your Apps Script URL here or leave blank" style="width:100%;padding:10px 12px;background:#1a1d2e;border:1px solid #2e3350;border-radius:6px;color:#fff;font-family:'DM Mono',monospace;font-size:11px;outline:none" />
     </div>
-    
     <div style="font-size:9px;color:#555;margin-bottom:16px;text-align:left">
       The app comes pre-loaded with common Grocery Outlet products.<br/>
       All inventory counts start at 0 — upload your first delivery to get started.<br/>
       You can add, remove, or rename departments and products anytime.
     </div>
-    
     <button onclick="completeSetup()" style="width:100%;padding:14px;background:#FFD700;color:#4a1b0c;border:none;border-radius:8px;font-family:'Syne',sans-serif;font-size:14px;font-weight:800;cursor:pointer;letter-spacing:.05em">
       START STOCKCTRL
     </button>
@@ -1159,7 +1152,7 @@ const DEFAULT_DEPTS=[
 ];
 
 // ══ STATE ═════════════════════════════════════════════════════════════════════
-const DATA_VER='sc_starter_v1';
+const DATA_VER='sc_starter_v2';
 if(localStorage.getItem('sc_ver')!==DATA_VER){
   localStorage.removeItem('sc_depts');
   localStorage.setItem('sc_ver',DATA_VER);
@@ -3788,13 +3781,13 @@ function applyPDF(){
   let newlyAdded=0;
   rows.forEach(r=>{
     let item=dept.items.find(i=>i.name.toLowerCase()===r.name.toLowerCase());
-    // AUTO-ADD: if item not found, create it automatically (delivery + throwaway)
-    if(!item&&(suType==='delivery'||suType==='throwaway')){
+    // AUTO-ADD: if item not found, create it automatically
+    if(!item){
       const pdfRow=pdfRows?pdfRows.find(pr=>pr.desc&&pr.desc.toLowerCase()===r.name.toLowerCase()):null;
       item={id:uid(),name:r.name,upc:pdfRow?pdfRow.upc:'',
         shelfMin:0,backstockMin:0,total:0,
-        deliveryTotal:0,throwawayTotal:0,soldTotal:0,
-        manualWeeklyAvg:null,salesHistory:[]};
+        deliveryTotal:0,casesReceived:0,throwawayTotal:0,soldTotal:0,
+        deliveryLbs:0,soldLbs:0,manualWeeklyAvg:null,salesHistory:[]};
       dept.items.push(item);
       newlyAdded++;
     }
@@ -4669,26 +4662,19 @@ function completeSetup(){
   const num=document.getElementById('wizStoreNum').value.trim();
   const user=document.getElementById('wizUserName').value.trim();
   const sync=document.getElementById('wizSyncUrl').value.trim();
-  
   const subtitle=name.toUpperCase()+(num?' · '+num:'');
   localStorage.setItem('sc_subtitle',subtitle);
   localStorage.setItem('sc_storeName',name);
   if(user) localStorage.setItem('sc_userName',user);
-  if(sync){
-    localStorage.setItem('sc_syncUrl',sync);
-    syncUrl=sync;
-  }
+  if(sync){ localStorage.setItem('sc_syncUrl',sync); syncUrl=sync; }
   localStorage.setItem('sc_setupDone','1');
-  
   document.getElementById('setupWizard').style.display='none';
   document.getElementById('appSubtitle').textContent=subtitle;
   document.title='STOCKCTRL — '+name;
-  
   if(sync) saveToDrive(false);
   renderDeptTabs();renderBanner();renderMain();
   showToast('Welcome to STOCKCTRL! Upload your first delivery to get started.','#FFD700');
 }
-// Show wizard on first load
 if(!localStorage.getItem('sc_setupDone')){
   window.addEventListener('load',()=>setTimeout(showSetupWizard,300));
 }
